@@ -12,8 +12,7 @@ const cookieParser = require('cookie-parser');
 const favicon = require('serve-favicon');
 // const logger = require('morgan');
 const locationsRoutes = require('./routes/locations.routes');
-// const EmptyLocation = require('./models/emptyLocation');
-// const OccupiedLocation = require('./models/occupiedLocation');
+
 const schedule = require('node-schedule');
 require('dotenv').config();
 
@@ -33,6 +32,7 @@ io.on('connection', (socket) => {
 
 	socket.on('change', (data) => {
 		console.log(data);
+		socket.broadcast.emit('update', {"data": "newdata"});
 	});
 });
 
@@ -59,7 +59,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // middlewares
-// app.use(logger('dev'));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -79,7 +79,7 @@ app.route('/login')
 		WHERE email = '${email}';`)
 			.then((data) => {
 				if (!data.password) {
-					res.status(401).json({ message: 'no such user found' });
+					res.redirect('/login');
 				}
 				if (data.password === password) {
 				// create a token
@@ -94,10 +94,11 @@ app.route('/login')
 					res.cookie('auth', token);
 					res.redirect('/');
 				} else {
-					res.status(401).json({ message: 'passwords did not match' });
+					res.redirect('/login');
 				}
 			}).catch((err) => {
-				res.send(`Something went wrong:${err.message}`);
+				console.log(err);
+				res.redirect('/login');
 			});
 	});
 

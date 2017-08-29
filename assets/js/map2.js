@@ -467,7 +467,7 @@ class Game {
 				};
 				map.data.add(locationNew);
 				map.data.remove(thisLocation);
-				socket.emit('change', response);  //<------------------------------------------
+				socket.emit('change', 'new location data');  //<------------------------------------------
 
 			})
 			.catch((err) => {
@@ -487,6 +487,10 @@ function initMap() {
 	});
 	window.onload = function () {
 		const game = new Game();
+
+		socket.on('update', (data) => {
+			console.log(data);
+		});
 
 		const lat0 = map.getBounds().getNorthEast().lat();
 		const lng0 = map.getBounds().getNorthEast().lng();
