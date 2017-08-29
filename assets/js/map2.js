@@ -253,7 +253,7 @@ class Game {
 	getUserLocationPromise() {
 		const createCurrentLocatonPromise = new Promise((res, rej) => {
 			navigator.geolocation.watchPosition((position) => {
-				console.log(position);
+				// console.log(position);
 			  res(position.coords);
 			}, (err) => {
 			  rej(err);
@@ -453,23 +453,6 @@ class Game {
 				const thisLocation = map.data.getFeatureById('currentLocation');
 
 				const location = this.getLocationPointsByTopLeft(response);
-				// [{
-				// 	// north west
-				// 	lat: response.lat,
-				// 	lng: response.lng,
-				// }, {
-				// 	// south west
-				// 	lat: ((response.lat * 100) + 1) / 100,
-				// 	lng: response.lng,
-				// }, {
-				// 	// south east
-				// 	lat: ((response.lat * 100) + 1) / 100,
-				// 	lng: ((response.lng * 100) + 1) / 100,
-				// }, {
-				// 	// north east
-				// 	lat: response.lat,
-				// 	lng: ((response.lng * 100) + 1) / 100,
-				// }];
 
 				const locationNew = {
 					type: 'Feature',
@@ -480,34 +463,22 @@ class Game {
 						},
 					},
 					geometry: new google.maps.Data.Polygon([location]),
-					// geometry: thisFeature.getGeometry(),
+
 				};
 				map.data.add(locationNew);
-				 map.data.remove(thisLocation);
+				map.data.remove(thisLocation);
+				socket.emit('change', response);  //<------------------------------------------
+
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-
-		// const locationId = Math.floor((Math.random() * new Date()) / 100000);
-		// const locationNew = {
-		//   type: 'Feature',
-		//   id: 'currentLocation',
-		//   properties: {
-		//     color: 'blue',
-		//     info: {
-		//       name: 'Current location',
-		//     },
-		//   },
-		//   geometry: new google.maps.Data.Polygon([location]),
-		// };
-		// map.data.add(locationNew);
-		// map.data.remove(feature);
 	}
 }
 
 
 let map;
+
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
 		zoom: 12,

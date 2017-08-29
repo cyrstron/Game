@@ -10,7 +10,7 @@ const path = require('path');
 const auth = require('./middleware/auth');
 const cookieParser = require('cookie-parser');
 const favicon = require('serve-favicon');
-const logger = require('morgan');
+// const logger = require('morgan');
 const locationsRoutes = require('./routes/locations.routes');
 // const EmptyLocation = require('./models/emptyLocation');
 // const OccupiedLocation = require('./models/occupiedLocation');
@@ -18,8 +18,23 @@ const schedule = require('node-schedule');
 require('dotenv').config();
 
 const app = express();
-// const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 const eventEmitter = new EventEmitter();
+
+
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
+
+server.listen(port);
+
+io.on('connection', (socket) => {
+	console.log('user connected');
+
+	socket.on('change', (data) => {
+		console.log(data);
+	});
+});
 
 global.db = pgp({
 	host: 'ec2-23-21-85-76.compute-1.amazonaws.com',
@@ -44,7 +59,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // middlewares
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -64,7 +79,7 @@ app.route('/login')
 		WHERE email = '${email}';`)
 			.then((data) => {
 				if (!data.password) {
-					res.redirect('/login');					
+					res.status(401).json({ message: 'no such user found' });
 				}
 				if (data.password === password) {
 				// create a token
@@ -79,10 +94,10 @@ app.route('/login')
 					res.cookie('auth', token);
 					res.redirect('/');
 				} else {
-					res.redirect('/login');
+					res.status(401).json({ message: 'passwords did not match' });
 				}
 			}).catch((err) => {
-				res.redirect('/login');
+				res.send(`Something went wrong:${err.message}`);
 			});
 	});
 
@@ -178,7 +193,7 @@ eventEmitter.on('daily-event', () => {
 
 // global.db.none('delete from locations');
 
-// app.listen(port, () => {
-// 	console.log(`Listen on port: ${port}`);
+// app.listen(8080, () => {
+// 	console.log(`Listen on port: 8080`);
 // });
 module.exports = app;
