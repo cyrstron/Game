@@ -32,6 +32,7 @@ io.on('connection', (socket) => {
 
 	socket.on('change', (data) => {
 		console.log(data);
+		console.log(data);
 		socket.broadcast.emit('update', { data: 'newdata' });
 	});
 
