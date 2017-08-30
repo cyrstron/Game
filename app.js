@@ -32,7 +32,11 @@ io.on('connection', (socket) => {
 
 	socket.on('change', (data) => {
 		console.log(data);
-		socket.broadcast.emit('update', {"data": "newdata"});
+		socket.broadcast.emit('update', { data: 'newdata' });
+	});
+
+	socket.on('disconnect', () => {
+		console.log('user disconnected');
 	});
 });
 

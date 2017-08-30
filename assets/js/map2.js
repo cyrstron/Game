@@ -489,7 +489,8 @@ function initMap() {
 		const game = new Game();
 
 		socket.on('update', (data) => {
-			console.log(data);
+			console.log('new locations added!');
+			game.renderLocationsFromDB();
 		});
 
 		const lat0 = map.getBounds().getNorthEast().lat();
