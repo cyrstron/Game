@@ -489,8 +489,8 @@ function initMap() {
 		const game = new Game();
 
 		socket.on('update', (data) => {			
-			setupMessageButton('Notification', 'The new location was occupied');
-			console.log('new locations added!');
+			setupMessage('Notification', 'The new location was occupied');
+			console.log('new locations added!');									
 			game.renderLocationsFromDB();
 		});
 
@@ -509,16 +509,13 @@ function initMap() {
 	};
 }
 
-// functions for notifications
 
-
-// The function creates a message with the specified body and header.
+// The function creates a notification with the specified body and header.
 function createMessage(title, body) { 
   var container = document.createElement('div');  
   container.innerHTML = '<div class="my-message"> \
     <div class="my-message-title">'+title+'</div> \
     <div class="my-message-body">'+body+'</div> \
-    <input class="my-message-ok" type="button" value="OK"/> \
   </div>'  
   return container.firstChild
 }
@@ -533,25 +530,12 @@ function positionMessage(elem) {
   elem.style.right = 20 + 'px'
 }
 
-// Closing
-function addCloseOnClick(messageElem) {
-
-  var input = messageElem.getElementsByTagName('INPUT')[0]
-
-  input.onclick = function() {
-    messageElem.parentNode.removeChild(messageElem)
-  }
-
-}
-
 // Running
-function setupMessageButton(title, body) {
-  // создать
-  var messageElem = createMessage(title, body)
-  // позиционировать
-  positionMessage(messageElem)
-  // добавить обработчик на закрытие
-  addCloseOnClick(messageElem)
-  // вставить в документ
-  document.body.appendChild(messageElem)
+function setupMessage(title, body) {  
+  var messageElem = createMessage(title, body); 
+  positionMessage(messageElem);
+  document.body.appendChild(messageElem);
+  setTimeout(function(){
+  	messageElem.parentNode.removeChild(messageElem)
+  }, 5000);
 }
