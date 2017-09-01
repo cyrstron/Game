@@ -6,7 +6,7 @@
  * Module dependencies.
  */
 
-const app = require('../app');
+const exportObjects = require('../app');
 const debug = require('debug')('heroku-test:server');
 const http = require('http');
 
@@ -15,13 +15,13 @@ const http = require('http');
  */
 
 const port = normalizePort(process.env.PORT || '8080');
-app.set('port', port);
+exportObjects.app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-const server = http.createServer(app);
+const server = http.createServer(exportObjects.app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -30,6 +30,8 @@ const server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+exportObjects.sockets.init(server);
 
 /**
  * Normalize a port into a number, string, or false.
