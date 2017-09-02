@@ -7,6 +7,9 @@ html {
   font-family: sans-serif;
 }
 
+body {
+  min-width: 300px;
+}
 body,
 html {
   height: 100%;
@@ -28,7 +31,7 @@ nav{
 }
 
 .app-nav {
-  display: flex;
+  /* display: flex; */
   list-style: none;
   padding: 0;
   margin: 0;
@@ -38,8 +41,9 @@ nav{
   display: block;
   color: white;
   text-decoration: none;
-  padding: 10px 20px;
+  padding: 5px 20px;
   text-transform: uppercase;
+  font-size: 14px;
 }
 
 .app-nav-ref:hover {
@@ -84,22 +88,25 @@ nav{
 
 .current-loc-info,
 .loc-info {
-  position: fixed;
-  width: 48.5%;
+   position: fixed; 
   line-height: 30px;
-  padding-left: 20px;
+  padding: 10px 20px;
   box-sizing: border-box;
-  display: none;
-  bottom: 0.5%;;
-  left: 0.5%;;
-  margin: 0.5%;
-  background-color: var(--if-color);
-  color: white;
+  /* display: none; */
+  top: 100%;
+  left: 2px;
+  right: 2px;
+  margin: 0;
+  background-color: #fefefe;
+  /* color: ; */
+  border: 1px solid #999;
+  border-radius: 5px;
+  transform: translateY(-30px);
+  transition: transform .6s ease;
 }
 
-.current-loc-info {
-  left: auto;
-  right: 0.5%;;
+.loc-info{
+  transform: translateY(-60px);
 }
 
 .info-heading {
@@ -108,21 +115,21 @@ nav{
 
 .occupy-btn {
   display: block;
-  position: absolute;
+  /* position: absolute; */
   right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 10px 20px;
-  background-color: rgba(255, 255, 255, 0.1);
+  padding: 14px 30px;
+  font-size: 1.2em;
+  background-color: rgba(0, 0, 0, 0.4);
   border: none;
   color: white;
   text-decoration: none;
   text-transform: uppercase;
   font-weight: bold;
+  margin: 20px auto 10px;
 }
 
 .occupy-btn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 
@@ -140,7 +147,48 @@ nav{
   position: absolute;
   left: 30px;
 }
+.close {
+  position: absolute;
+  right: 10px;
+  top: 15px;
+  text-indent: 9999px;
+  overflow: hidden;
+  width: 15px;
+  height: 15px;
+   transform: rotate(135deg); 
+   transition: transform .3s ease;
+}
+.close:before {
+  content:"";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  display: block;
+  border-left: 2px solid #333;
+  border-bottom: 2px solid #333;
+}
 
+.close:hover {
+  opacity: .7;
+}
+
+
+.current-loc-info.open {
+  transform: translateY(-100%);
+  /* z-index: 2; */
+}
+
+.loc-info.open {
+  transform: translateY(calc(-100% - 30px));
+
+}
+.current-loc-info.open .close,
+.loc-info.open .close {
+
+  transform: rotate(-45deg); 
+}
 .my-message {
    width:300px;
    min-height:80px;   

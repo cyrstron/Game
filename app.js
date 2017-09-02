@@ -21,27 +21,6 @@ const app = express();
 // const port = process.env.PORT || 8080;
 const eventEmitter = new EventEmitter();
 
-let sockets = {};
-
-sockets.init = function (server) {
-    // socket.io setup
-    let io = require('socket.io').listen(server);
-    io.sockets.on('connection', (socket) => {
-		console.log('user connected');
-
-		socket.on('change', (data) => {
-			console.log(data);
-			console.log(data);
-			socket.broadcast.emit('update', { data: 'newdata' });
-		});
-
-		socket.on('disconnect', () => {
-			console.log('user disconnected');
-		});
-    });
-
-}
-
 
 
 global.db = pgp({
@@ -204,6 +183,4 @@ eventEmitter.on('daily-event', () => {
 // app.listen(port, () => {
 // 	console.log(`Listen on port: ${port}`);
 // });
-
-module.exports.app = app;
-module.exports.sockets = sockets;
+module.exports = app;

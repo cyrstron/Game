@@ -36,21 +36,26 @@
         <div class="curr-loc-highlight" id="curr-loc-highlight"></div>
         
 
-  <div class="loc-info" id="output">
-    <h2 class="info-heading" id="click-loc-heading"></h2>
-    <br>
-    Location coords: <span id="click-location"></span>
+  <div class="loc-info" style="display: none" id="output">
+    <a href="#" class="close">close</a>
+    <div>
+      <h2 class="info-heading" id="click-loc-heading"></h2>
+      <br>
+      Location coords: <span id="click-location"></span>
+    </div>
   </div>
   <div class="current-loc-info" id="current-loc-info">
-    <h2 class="info-heading">Current location</h2>
-    User coords: <span id="users-geocords"></span>
-    <br>
-    Location coords: <span id="users-location"></span>
-    <button class="occupy-btn" id="occupy-btn">Occupy</button>
+    <a href="#" class="close">close</a>
+    <div>
+      <h2 class="info-heading">Current location</h2>
+     <p> User coords: <span id="users-geocords"></span></p>
+      <p>Location coords: <span id="users-location"></span></p>
+    </div>
+    <button class="occupy-btn" id="occupy-btn" <!-- style="display: none">Occupy</button>
     </div>
     
     <!-- <div id="info-box"></div> -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
   <script>
     var socket = io();
   </script>
