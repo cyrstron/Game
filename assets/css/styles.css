@@ -189,9 +189,6 @@ nav{
   text-align: center;
 }
 
-
-
-
 #map {
   height: 100%;
 }
@@ -377,10 +374,14 @@ nav{
   transform: rotate(45deg);
 }
 
-
+.occup-form,
 .clicked-loc-info,
 .current-loc-info {
   display: none;
+}
+
+.show-form .occup-form {
+  display: block;
 }
 .show-clicked .clicked-loc-info {
   display: block;
