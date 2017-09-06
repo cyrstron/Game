@@ -835,12 +835,12 @@ function initMap() {
 				alert('Your geolocation is not working. Probably you forgot to turn it on. Please, turn on geolocation and give proper access to this app');
 			});
 
-			setTimeout(() => {
-				game.refreshUserGeodata({
-					lat: game.userGeoData.lat,
-					lng: game.userGeoData.lng
-				});
-			}, 5000);
+			// setTimeout(() => {
+			// 	game.refreshUserGeodata({
+			// 		lat: game.userGeoData.lat,
+			// 		lng: game.userGeoData.lng
+			// 	});
+			// }, 5000);
 
 			map.addListener('click', (event) => {
 				game.renderEmptyLocationInfo(event);
