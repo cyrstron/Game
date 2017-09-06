@@ -237,8 +237,8 @@ class Game {
 
 	getCurrentLocation() {
 		const geoCoords = {
-			lat: this.userGeoData.latitude,
-			lng: this.userGeoData.longitude
+			lat: this.userGeoData.lat,
+			lng: this.userGeoData.lng
 		};
 		return new Promise((res, rej) => {
 			const gridXHR = new XMLHttpRequest();
@@ -307,7 +307,7 @@ class Game {
 	// CURRENT LOCATION RENDER METHODS
 
 	renderCurrentLocationInfo() {
-		this.getCurrentLocation()
+		return this.getCurrentLocation()
 			.then((currentLocation) => {
 				console.log(currentLocation);
 				this.removeCurrentHighlight();
@@ -458,8 +458,7 @@ class Game {
 	}
 
 	renderHighlightedLocationTextInfo() {
-		this.locInfoContainer.className = 'loc-info';
-		this.locInfoContainer.classList.add('show-clicked');
+		this.locInfoContainer.className = 'loc-info show-clicked';
 		this.clickedLocInfo.innerHTML = this.getLocInfoHTML(this.highlightedLocation);
 	}
 
@@ -513,6 +512,7 @@ class Game {
 				const locationIsHighlighted = this.currentLocation.isHighlighted;
 
 				this.occupiedLocationsArray.push(newLocation);
+				this.renderFullLocation(newLocation);
 				this.renderCurrentOccupiedLocation(newLocation);
 				this.renderCurrentLocationTextInfo();
 
@@ -605,8 +605,8 @@ class Game {
 			createLocationXHR.setRequestHeader('Content-Type', 'application/json');
 			createLocationXHR.send(JSON.stringify({
 				userGeoData: {
-					lat: this.userGeoData.latitude,
-					lng: this.userGeoData.longitude
+					lat: this.userGeoData.lat,
+					lng: this.userGeoData.lng
 				}
 			}));
 			createLocationXHR.onload = (e) => {
@@ -627,8 +627,8 @@ class Game {
 			createLocationXHR.setRequestHeader('Content-Type', 'application/json');
 			createLocationXHR.send(JSON.stringify({
 				userGeoData: {
-					lat: this.userGeoData.latitude,
-					lng: this.userGeoData.longitude
+					lat: this.userGeoData.lat,
+					lng: this.userGeoData.lng
 				}
 			}));
 			createLocationXHR.onload = (e) => {
@@ -691,9 +691,40 @@ class Game {
 
 	// GOOGLE MAP AND HTML5 GEOLOCATION INTERACTION METHODS
 
+	refreshUserGeodata(coords) {
+		const locInfoClassList = this.locInfoContainer.className;
+		this.setUserGeoData(coords);
+		this.renderCurrentUserMarker();
+
+		this.renderCurrentLocationInfo()
+			.then(() => {
+				if (this.highlightedLocation) {
+					const currentIsHighlighted = (
+						this.currentLocation.northWest.lat === this.highlightedLocation.northWest.lat &&
+						this.currentLocation.northWest.lng === this.highlightedLocation.northWest.lng
+					);
+					if (currentIsHighlighted) {
+						if (!this.currentLocation.locationId) {
+							this.hightlightCurrentEmptyLocation();
+						} else {
+							this.highlightOccupiedLocation(this.currentLocation);
+						}
+						this.renderHighlightedLocationTextInfo();
+					}
+				}
+				// do not change displaying element in loc-info;
+				this.locInfoContainer.className = locInfoClassList === 'loc-info' ?
+					this.locInfoContainer.className :
+					locInfoClassList;
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}
+
 	centerMapByUserGeoData() {
-		const lat = this.userGeoData.latitude;
-		const lng = this.userGeoData.longitude;
+		const lat = this.userGeoData.lat;
+		const lng = this.userGeoData.lng;
 		this.map.setZoom(15);
 		this.map.setCenter({ lat, lng });
 	}
@@ -704,8 +735,8 @@ class Game {
 		}
 		this.userMarker = new google.maps.Marker({
 			position: {
-				lat: this.userGeoData.latitude,
-				lng: this.userGeoData.longitude
+				lat: this.userGeoData.lat,
+				lng: this.userGeoData.lng
 			},
 			map: this.map,
 			title: 'There you are!'
@@ -795,10 +826,21 @@ function initMap() {
 			});
 
 			navigator.geolocation.watchPosition((position) => {
-				game.setUserGeoData(position.coords);
-				game.renderCurrentLocationInfo();
-				game.renderCurrentUserMarker();
+				game.refreshUserGeodata({
+					lat: position.coords.latitude,
+					lng: position.coords.longitude
+				});
+			}, () => {
+				// THERE HAVE TO BE CODE FOR TURNED OFF GEOLOCATION NOTIFICATION
+				alert('Your geolocation is not working. Probably you forgot to turn it on. Please, turn on geolocation and give proper access to this app');
 			});
+
+			// setTimeout(() => {
+			// 	game.refreshUserGeodata({
+			// 		lat: game.userGeoData.lat,
+			// 		lng: game.userGeoData.lng
+			// 	});
+			// }, 5000);
 
 			map.addListener('click', (event) => {
 				game.renderEmptyLocationInfo(event);
