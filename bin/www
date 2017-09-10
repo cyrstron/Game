@@ -83,6 +83,9 @@ setInterval(() => {
 	http.get('http://mouse-lord.herokuapp.com', () => {
 		console.log('Greed is a sin');
 	});
+	http.get('http://blooming-mesa-57467.herokuapp.com/', () => {
+		console.log('Greed is a sin');
+	});
 }, 1200000);
 
 /**
